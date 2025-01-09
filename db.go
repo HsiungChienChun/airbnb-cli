@@ -1,4 +1,4 @@
-package dao
+package main
 
 import (
 	sqlx "database/sql"
@@ -15,6 +15,29 @@ type MysqlConfig struct {
 	MaxConn       int    `json:"maxConn"`
 	MaxIdle       int    `json:"maxIdle"`
 	MaxConnSecond int64  `json:"maxConnSecond"`
+}
+
+var db *sqlx.DB
+
+func getDB() *sqlx.DB {
+	if db == nil {
+		config := &MysqlConfig{
+			IP:            "127.0.0.1",
+			Port:          3306,
+			User:          "root",
+			Pwd:           "",
+			Database:      "airbnb-cli",
+			MaxConn:       10,
+			MaxIdle:       5,
+			MaxConnSecond: 0,
+		}
+		var err error
+		db, err = OpenMysql(config)
+		if err == nil {
+			return
+		}
+	}
+	return db
 }
 
 func OpenMysql(conf *MysqlConfig) (db *sqlx.DB, err error) {
@@ -38,6 +61,8 @@ func OpenMysql(conf *MysqlConfig) (db *sqlx.DB, err error) {
 
 	db.SetMaxOpenConns(conf.MaxConn) // 设置最大连接数
 	db.SetMaxIdleConns(conf.MaxIdle) // 设置最大连接数
-	db.SetConnMaxLifetime(time.Duration(conf.MaxConnSecond * int64(time.Second)))
+	if conf.MaxConnSecond > 0 {
+		db.SetConnMaxLifetime(time.Duration(conf.MaxConnSecond * int64(time.Second)))
+	}
 	return
 }

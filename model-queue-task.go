@@ -1,25 +1,28 @@
-package producer
+package main
 
 import (
 	"encoding/json"
 	"os"
 )
 
-type TaskHeader struct {
-	UserAgent string `json:"user-agent"`
-}
+const (
+	TaskStateWait = 1
+	TaskStateLock = 2
+	TaskStateSucc = 3
+	TaskStateFail = 4
+)
 
 type TaskItem struct {
-	Name    string     `json:"name"`
-	URL     string     `json:"url"`
-	Headers TaskHeader `json:"headers"`
+	Name    string            `json:"name"`
+	URL     string            `json:"url"`
+	Headers map[string]string `json:"headers"`
 }
 
 type TaskData struct {
 	Tasks []*TaskItem `json:"tasks"`
 }
 
-func ParseTasks(dataPath string) (tasks []*TaskItem, err error) {
+func ParseTaskFile(dataPath string) (tasks []*TaskItem, err error) {
 	dataBts, err := os.ReadFile(dataPath)
 	if err != nil {
 		// Todo errors.Wrap
