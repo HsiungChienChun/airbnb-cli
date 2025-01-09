@@ -59,8 +59,12 @@ func OpenMysql(conf *MysqlConfig) (db *sqlx.DB, err error) {
 		return
 	}
 
-	db.SetMaxOpenConns(conf.MaxConn) // 设置最大连接数
-	db.SetMaxIdleConns(conf.MaxIdle) // 设置最大连接数
+	if conf.MaxConn > 0 {
+		db.SetMaxOpenConns(conf.MaxConn) // 设置最大连接数
+	}
+	if conf.MaxIdle > 0 {
+		db.SetMaxIdleConns(conf.MaxIdle) // 设置最大连接数
+	}
 	if conf.MaxConnSecond > 0 {
 		db.SetConnMaxLifetime(time.Duration(conf.MaxConnSecond * int64(time.Second)))
 	}
