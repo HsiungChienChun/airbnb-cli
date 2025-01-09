@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// 解析任务并执行保存
+// 数据爬取任务执行逻辑
 func bookingTaskProcess(task *TaskItem) (err error) {
 	listPageBody, err := getListPage(task)
 	if err != nil {
@@ -17,8 +17,8 @@ func bookingTaskProcess(task *TaskItem) (err error) {
 	cursorList := parseSubPageCursor(listPageBody)
 
 	// 依次遍历各个分页，解析数据
-	for _, item := range cursorList {
-		pageBody := ""
+	for _, cursor := range cursorList {
+		pageBody := getListPageByCursor(cursor)
 
 		// 获取列表页内详情链接信息学
 		detailList := parseDetailIDs(pageBody)
@@ -41,20 +41,29 @@ func bookingTaskProcess(task *TaskItem) (err error) {
 }
 
 func parseDetailInfo(detailBody string) (detail *Booking) {
+	// TODO 解析详情页中的客房预定信息
 	return
 }
 
 // 解析分页列表，后去列表项ID（or链接）
 func parseDetailIDs(pageBody string) (detailIDs []string) {
+	// TODO 解析搜索结果页的列表item中的详情页访问连接ID列表
 	return
 }
 
 // 访问第一页，拿到分页游标列表，后续按分页遍历
 func parseSubPageCursor(pageBody string) (cursors []string) {
+	// TODO 解析搜索结果页的分页cursor列表
 	return
 }
 
-// 获取首页列表
+// 根据cursor获取搜索结果列表页数据
+func getListPageByCursor(cursor string) (pageInfo string) {
+	// TODO 访问搜索结果列表分页，获取所有数据后再解析
+	return
+}
+
+// 根绝任务信息获取搜索结果首页列表
 func getListPage(task *TaskItem) (pageInfo string, err error) {
 	req, err := http.NewRequest("GET", task.URL, strings.NewReader(""))
 	if err != nil {
@@ -79,5 +88,3 @@ func getListPage(task *TaskItem) (pageInfo string, err error) {
 	pageInfo = string(dataBs)
 	return
 }
-
-// /s/Europe/homes?refinement_paths%5B%5D=%2Fhomes&query=Europe&place_id=ChIJhdqtz4aI7UYRefD8s-aZ73I&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2025-02-01&monthly_length=3&monthly_end_date=2025-05-01&search_mode=regular_search&price_filter_input_type=0&channel=EXPLORE&search_type=user_map_move&price_filter_num_nights=5&ne_lat=61.86486211129339&ne_lng=37.42984862589401&sw_lat=23.59018458925222&sw_lng=-9.683937857471903&zoom=3.3359550737736523&zoom_level=3&search_by_map=true&federated_search_session_id=ec667451-7475-4772-bb10-a897c895251a&pagination_search=true&cursor=eyJzZWN0aW9uX29mZnNldCI6MCwiaXRlbXNfb2Zmc2V0IjozNiwidmVyc2lvbiI6MX0%3D

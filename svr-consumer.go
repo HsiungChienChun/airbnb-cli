@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// 启动消费逻辑
 func ConsumerStart(stopNotify func() bool) {
 	var currency int
 	flag.IntVar(&currency, "workers", 1, "消费并发度，默认1")
