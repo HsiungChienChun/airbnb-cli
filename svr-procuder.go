@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// airbnb-cli start producer --data tasks.json --queue=<your-queue-server>
+// 启动生产逻辑
 func ProducerStart(stopNotify func() bool) {
 	dataPathPtr := flag.String("data", "", "任务文件访问路径path")
 	queueIDPtr := flag.String("queue", "", "任务投递队列名")
